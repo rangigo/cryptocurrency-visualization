@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Cryptocurrency Coins Visualization</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+</head>
+
+<body>
+  <header class='page-header'>
+    <h1>Cryptocurrency Coins Visualization</h1>
+  </header>
+  <section class='page-content'>
+    <div class='filter-tool'>
+      <input type='text' placeholder="Enter coin name here (blank to display all)" id='filter-name'>
+      <!-- <button type='submit' id='filter-name-btn'>Submit</button> -->
+    </div>
+    <table class='coin-table'>
+      <thead>
+        <tr>
+          <th id='rank-sort'>Rank</th>
+          <th id='name-sort'>Name</th>
+          <th id='price-sort'>Price (USD)</th>
+          <th id='change-sort'>Change (24h)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- <tr>
+          <td>1</td>
+          <td>Dummy</td>
+          <td>123$</td>
+          <td>4.21</td>
+        </tr> -->
+      </tbody>
+    </table>
+  </section>
+  <script src="main.js"></script>
+</body>
+
+</html>
