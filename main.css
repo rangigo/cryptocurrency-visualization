@@ -88,3 +88,9 @@ body {
   text-decoration: underline;
   cursor: pointer;
 }
+
+@media (max-width: 500px) {
+  .coin-table {
+    font-size: .8em;
+  }
+}
