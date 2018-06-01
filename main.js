@@ -54,10 +54,13 @@ const render = (data, sort, reverse) => {
       el.textContent += '% ↘' 
     }
   })
+
+  //Number of coins
+  $('.num-of-coins').innerHTML = `Number of coins: <strong>${data.length}</strong>`
 }
 
 //Init fetch and render
-fetch('https://api.coinmarketcap.com/v2/ticker/?limit=100')
+fetch('https://api.coinmarketcap.com/v2/ticker/')
   .then(res => res.json())
   .then(json => {
     //Store fetched JSON to variable
@@ -72,24 +75,15 @@ fetch('https://api.coinmarketcap.com/v2/ticker/?limit=100')
 $('#filter-name').addEventListener('keyup', e => {
   //If blank, display all
   if (e.target.value == '') {
-    //Display all
     render(coins)
   } else {
-    //Search for the coin
+    //Search for the coins
     filteredCoins = coins.filter(
       el =>
         el.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
         el.symbol.toLowerCase().includes(e.target.value.toLowerCase())
     )
-
-    //If filteredCoins is available, display the coin
-    if (filteredCoins.length > 0) {
-      table.innerHTML = ''
-      render(filteredCoins)
-    } else {
-      //Else display none
-      table.innerHTML = ''
-    }
+    render(filteredCoins)
   }
 })
 
@@ -120,7 +114,7 @@ const sortByChange = data =>
   )
 
 
-//Add event for sort button
+//Add event for sort buttons
 $$('.sort-button').forEach(el =>
   el.addEventListener('click', e => {
     //Only 1 sort arrow displayed per clicked button
@@ -173,3 +167,16 @@ $$('.sort-button').forEach(el =>
   })
 )
 
+//End of scroll, load new coins
+let counter = 1
+window.onscroll = function(ev) {
+  if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
+      fetch(`https://api.coinmarketcap.com/v2/ticker/?start=${counter+=100}`)
+        .then(res => res.json())
+        .then(json => {
+          Object.values(json.data).forEach(el => coins.push(el))
+          render(coins)
+        })
+        .catch(err => console.log(err))
+  }
+}

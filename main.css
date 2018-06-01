@@ -1,13 +1,13 @@
 body {
   margin: 0;
-  background: #D7B29D;
   font-family: 'Montserrat', sans-serif;
+  background: #eee5e5;
 }
 
 .page-header {
-  background: #E8D2AE;
+  background: #ddcecd;
   text-align: center;
-  box-shadow: 0px 6px 10px -3px #6B9080;
+  box-shadow: 0px 6px 10px -3px #6b9080;
   padding: 25px;
 }
 
@@ -20,7 +20,7 @@ body {
 .filter-tool {
   justify-content: center;
   display: flex;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
 }
 
 .filter-tool input[type='text'] {
@@ -29,27 +29,54 @@ body {
   padding: 10px 5px;
   border-radius: 5px;
   border: none;
+  background: #896a3e;
+  color: black;
+}
+.filter-tool input[type='text']::placeholder {
+  color: black;
 }
 
 .filter-tool button:hover {
   background: rgb(80, 81, 84);
 }
 
+.num-of-coins {
+  padding: 10px;
+  margin-bottom: 50px;
+  background: #896a3e;
+  font-size: 1.3em;
+  border-radius: 2px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .coin-table {
   font-size: 1.1em;
   width: 100%;
   border-collapse: collapse;
+  border-radius: 2px;
 }
 
-.coin-table td, .coin-table th {
-  border: 1px solid #2A4849;
+.coin-table td,
+.coin-table th {
   padding: 8px;
   position: relative;
+}
+
+.coin-table th:first-child,
+.coin-table td:first-child {
+  padding-left: 30px;
 }
 
 .coin-table th {
   text-align: left;
   padding: 15px 8px;
+  background: #d2b186;
+}
+
+.coin-table td {
+  background: #eae2d1;
 }
 
 .coin-table td img {
@@ -58,28 +85,28 @@ body {
 }
 
 .sort-button.selected.desc::after {
-  content: "";
-  width: 0; 
+  content: '';
+  width: 0;
   height: 0;
   margin-right: 3px;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   position: absolute;
-  right: .2em;
+  right: 0.2em;
   top: 1.3em;
   border-bottom: 5px solid black;
   border-top: none;
 }
 
 .sort-button.selected::after {
-  content: "";
-  width: 0; 
+  content: '';
+  width: 0;
   height: 0;
   margin-right: 3px;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
   position: absolute;
-  right: .2em;
+  right: 0.2em;
   top: 1.5em;
   border-top: 5px solid black;
 }
@@ -91,6 +118,6 @@ body {
 
 @media (max-width: 500px) {
   .coin-table {
-    font-size: .8em;
+    font-size: 0.8em;
   }
 }
