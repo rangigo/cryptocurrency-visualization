@@ -77,6 +77,8 @@ $('#filter-name').addEventListener('keyup', e => {
   if (e.target.value == '') {
     render(coins)
   } else {
+    //Remove sort arrow
+    $$('.sort-button').forEach(el => el.classList.remove('selected'))
     //Search for the coins
     filteredCoins = coins.filter(
       el =>
