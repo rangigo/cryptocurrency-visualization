@@ -1,0 +1,21 @@
+.Coin {
+  text-align: center;
+  background: #AAB9CF;
+  border-radius: .5rem;
+  border-bottom: 5px solid #8693AB;
+  color: #212227;
+  padding: 20px 0;  
+  font-weight: 500;
+}
+
+.Coin img {
+  margin-right: 7px;
+}
+
+.Red {
+  color: red;
+}
+
+.Green {
+  color: green;
+}
