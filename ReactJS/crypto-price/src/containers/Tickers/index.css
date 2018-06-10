@@ -26,8 +26,8 @@
   width: 100%;
   box-sizing: border-box;
   border: none;
-  border-radius: .25rem;
-  background: #D2CCA1;
+  border-radius: 0.25rem;
+  background: #d2cca1;
   font-size: 1.5em;
   padding: 5px;
   font-family: 'Montserrat', sans-serif;
@@ -37,7 +37,7 @@
   position: absolute;
   right: 0;
   font-size: 1.2em;
-  padding: .4em;
+  padding: 0.4em;
   font-weight: 500;
 }
 
@@ -46,14 +46,31 @@
 
 .FixedHeader {
   position: fixed;
-  top: 0; left: 0;
+  top: 0;
+  left: 0;
   width: 100%;
   background: #eee5e5;
   padding-bottom: 3px;
 }
 
+.ToTop {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  cursor: pointer;
+  background: #F7AF9D;
+  border-radius: 50%;
+  padding: 10px;
+}
+
 @media (max-width: 580px) {
   .FunctionPanel {
     align-items: center;
+  }
+}
+
+@media (max-width: 320px) {
+  .MainContent {
+    padding: 4em 1.5em;
   }
 }

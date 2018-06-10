@@ -93,7 +93,7 @@ export class Tickers extends Component {
       }
     }
   }
-  
+
   filterHandle = ev => {
     //If input has values, change state to notify that we are filtering coins
     //else just render initial coins and turn notify off
@@ -203,6 +203,7 @@ export class Tickers extends Component {
     }
   }
 
+
   render() {
     //Render coins based on filter input
     const coins = this.state.isFiltering
@@ -254,9 +255,7 @@ export class Tickers extends Component {
         <div className={classes.Tickers} ref={this.setTickersRef}>
           {coins}
         </div>
-        <div className={classes.toTop}>
-          
-        </div>
+        <i className={`fas fa-arrow-up ${classes.ToTop} fa-2x`} onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}></i>
       </main>
     )
   }
