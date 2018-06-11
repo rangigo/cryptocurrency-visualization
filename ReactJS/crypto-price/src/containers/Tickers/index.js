@@ -77,17 +77,23 @@ export class Tickers extends Component {
       }
 
       if (
-        window.innerHeight + window.pageYOffset >=
-        document.body.offsetHeight && !this.state.isFiltering
+        window.innerHeight + window.pageYOffset >= document.body.offsetHeight-1 &&
+        !this.state.isFiltering && this.state.counter < 1700
       ) {
-        fetch(`https://api.coinmarketcap.com/v2/ticker/?convert=BTC&start=${this.state.counter}`)
+        console.log('end')
+        fetch(
+          `https://api.coinmarketcap.com/v2/ticker/?convert=BTC&start=${
+            this.state.counter
+          }`
+        )
           .then(res => res.json())
           .then(json => {
-            const newCoins = [...this.state.coins]
-            Object.values(json.data)
-              .sort(sortHelper.byRank)
-              .forEach(el => newCoins.push(el))
-            this.setState({coins: newCoins, counter: this.state.counter + 100})
+            this.setState({
+              coins: this.state.coins.concat(
+                Object.values(json.data).sort(sortHelper.byRank)
+              ),
+              counter: this.state.counter + 100
+            })
           })
           .catch(err => console.log(err))
       }
@@ -203,7 +209,6 @@ export class Tickers extends Component {
     }
   }
 
-
   render() {
     //Render coins based on filter input
     const coins = this.state.isFiltering
@@ -237,7 +242,7 @@ export class Tickers extends Component {
               </strong>
             </span>
           </div>
-          <div className={classes.SortPanel}>
+          <div>
             <SortButton
               type={`sort-numeric-${this.state.rankRev ? 'up' : 'down'}`}
               sort={() => this.sortHandle('rank')}
@@ -255,7 +260,10 @@ export class Tickers extends Component {
         <div className={classes.Tickers} ref={this.setTickersRef}>
           {coins}
         </div>
-        <i className={`fas fa-arrow-up ${classes.ToTop} fa-2x`} onClick={() => window.scrollTo({top: 0, behavior: 'smooth'})}></i>
+        <i
+          className={`fas fa-arrow-up ${classes.ToTop} fa-2x`}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        />
       </main>
     )
   }

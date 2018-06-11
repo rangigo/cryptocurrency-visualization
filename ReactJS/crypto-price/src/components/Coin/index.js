@@ -36,7 +36,7 @@ const coin = props => {
         {name} ({symbol})
       </h4>
       <h1>${price_usd}</h1>
-      <h3>{price_btc.toFixed(9)} BTC</h3>
+      <h3>{(price_btc !== null) ? price_btc.toFixed(9) : 'null'} BTC</h3>
       <p>
         <strong>Rank: {rank}</strong>
       </p>

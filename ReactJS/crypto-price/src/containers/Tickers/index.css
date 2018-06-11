@@ -41,16 +41,13 @@
   font-weight: 500;
 }
 
-.SortPanel {
-}
-
 .FixedHeader {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  background: #eee5e5;
-  padding-bottom: 3px;
+  background: #eee5e5;padding: 10px 0;
+  box-shadow: 0 5px 15px #00000085;
 }
 
 .ToTop {
