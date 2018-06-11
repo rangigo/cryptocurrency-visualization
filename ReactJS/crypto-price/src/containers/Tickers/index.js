@@ -212,8 +212,8 @@ export class Tickers extends Component {
   render() {
     //Render coins based on filter input
     const coins = this.state.isFiltering
-      ? this.state.filterCoins.map(el => <Coin data={el} key={el.id} />)
-      : this.state.coins.map(el => <Coin data={el} key={el.id} />)
+      ? this.state.filterCoins.map( (el, id) => <Coin data={el} key={id} />)
+      : this.state.coins.map((el,id) => <Coin data={el} key={id} />)
 
     const dynamicNum = window.innerWidth > 990 ? 'Number of coins: ' : ''
     const placeholderFilter =
