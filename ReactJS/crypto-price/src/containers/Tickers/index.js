@@ -65,7 +65,10 @@ export class Tickers extends Component {
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll)
   }
-
+  componentDidUpdate() {
+    console.log(this.state.filterCoins);
+    
+  }
   handleScroll = () => {
     if (this.panelRef !== null && this.tickersRef !== null) {
       if (window.pageYOffset >= this.state.panelOffsetTop) {
@@ -214,7 +217,7 @@ export class Tickers extends Component {
     const coins = this.state.isFiltering
       ? this.state.filterCoins.map( (el, id) => <Coin data={el} key={id} />)
       : this.state.coins.map((el,id) => <Coin data={el} key={id} />)
-
+    
     const dynamicNum = window.innerWidth > 990 ? 'Number of coins: ' : ''
     const placeholderFilter =
       window.innerWidth < 765
@@ -244,15 +247,15 @@ export class Tickers extends Component {
           </div>
           <div>
             <SortButton
-              type={`sort-numeric-${this.state.rankRev ? 'up' : 'down'}`}
+              type={`sort-numeric-${this.state.rankRev ? 'down' : 'up'}`}
               sort={() => this.sortHandle('rank')}
             />
             <SortButton
-              type={`sort-alpha-${this.state.nameRev ? 'up' : 'down'}`}
+              type={`sort-alpha-${this.state.nameRev ? 'down' : 'up'}`}
               sort={() => this.sortHandle('name')}
             />
             <SortButton
-              type={`sort-amount-${this.state.priceRev ? 'up' : 'down'}`}
+              type={`sort-amount-${this.state.priceRev ? 'down' : 'up'}`}
               sort={() => this.sortHandle('price')}
             />
           </div>
