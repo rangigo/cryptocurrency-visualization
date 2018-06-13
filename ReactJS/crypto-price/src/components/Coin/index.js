@@ -33,7 +33,7 @@ const coin = props => {
           src={`https://s2.coinmarketcap.com/static/img/coins/32x32/${id}.png `}
           alt="logo"
         />
-        {name} ({symbol})
+        <span>{name} ({symbol})</span>
       </h4>
       <h1>${price_usd}</h1>
       <h3>{(price_btc !== null) ? price_btc.toFixed(9) : 'null'} BTC</h3>

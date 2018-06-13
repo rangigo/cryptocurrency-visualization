@@ -16,6 +16,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 1.33em auto;
+  width: 90%;
+}
+
+.Coin h4 > span {
+  max-width: 80%;
 }
 
 .Red {

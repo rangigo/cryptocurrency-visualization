@@ -34,6 +34,10 @@
   font-family: 'Montserrat', sans-serif;
 }
 
+.Filter:disabled {
+  cursor: not-allowed;
+}
+
 .CoinsAmount {
   position: absolute;
   right: 0;

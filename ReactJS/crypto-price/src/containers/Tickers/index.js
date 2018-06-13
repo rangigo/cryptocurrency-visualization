@@ -57,8 +57,7 @@ export class Tickers extends Component {
         //Set total amount of coins
         if (this.state.limit === 0) {
           this.setState({
-            limit: json.metadata.num_cryptocurrencies,
-            loading: false
+            limit: json.metadata.num_cryptocurrencies
           })
         }
 
@@ -260,6 +259,7 @@ export class Tickers extends Component {
               type="text"
               onChange={ev => this.filterHandle(ev)}
               placeholder={placeholderFilter}
+              disabled={this.state.data.length < this.state.limit}
             />
             <span className={classes.CoinsAmount}>
               {dynamicNum}
