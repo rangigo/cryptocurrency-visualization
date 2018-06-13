@@ -30,7 +30,7 @@ const coin = props => {
     <div className={classes.Coin}>
       <h4>
         <img
-          src={`https://s2.coinmarketcap.com/static/img/coins/16x16/${id}.png `}
+          src={`https://s2.coinmarketcap.com/static/img/coins/32x32/${id}.png `}
           alt="logo"
         />
         {name} ({symbol})

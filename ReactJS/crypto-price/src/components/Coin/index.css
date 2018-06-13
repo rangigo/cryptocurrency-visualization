@@ -12,6 +12,12 @@
   margin-right: 7px;
 }
 
+.Coin h4 { 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .Red {
   color: red;
 }

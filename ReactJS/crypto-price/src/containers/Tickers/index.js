@@ -3,6 +3,7 @@ import classes from './index.css'
 
 import Coin from '../../components/Coin'
 import SortButton from '../../components/SortButton'
+import Spinner from '../../components/Spinner/Spinner'
 
 //Sort helper functions
 const sortHelper = {
@@ -24,6 +25,7 @@ const sortHelper = {
 
 export class Tickers extends Component {
   state = {
+    data: [],
     coins: [],
     filterCoins: [],
     isFiltering: false,
@@ -32,25 +34,57 @@ export class Tickers extends Component {
     priceRev: false,
     nameRev: false,
     panelOffsetTop: 0,
-    counter: 101
+    limit: 0,
+    counter: 1,
+    loading: true
   }
 
   //Get DOM ref to panel div & tickers
   panelRef = null
   tickersRef = null
 
-  componentDidMount() {
-    fetch('https://api.coinmarketcap.com/v2/ticker/?convert=BTC')
+  //Init fetch
+
+  fetchData = () => {
+    fetch(
+      `https://api.coinmarketcap.com/v2/ticker/?convert=BTC&start=${Math.min(
+        this.state.counter,
+        this.state.limit
+      )}`
+    )
       .then(res => res.json())
       .then(json => {
-        this.setState({
-          coins: Object.values(json.data).sort(sortHelper.byRank),
-          rankRev: true
-        })
-        console.log(this.state)
+        //Set total amount of coins
+        if (this.state.limit === 0) {
+          this.setState({
+            limit: json.metadata.num_cryptocurrencies,
+            loading: false
+          })
+        }
+
+        //Recursion fetch until we have all the coins loaded
+        if (this.state.counter <= this.state.limit) {
+          this.setState({
+            data: this.state.data.concat(
+              Object.values(json.data).sort(sortHelper.byRank)
+            ),
+            counter: this.state.counter + 100
+          })
+          //If we finished fetch first 100 coins, display them
+          if (this.state.data.length === 100)
+            this.setState({
+              coins: this.state.data,
+              loading: false
+            })
+          this.fetchData()
+        }
       })
       .catch(err => console.log(err))
+  }
 
+  componentDidMount() {
+    //Fetch coins when component is loaded
+    this.fetchData()
     //On scroll event to add fixed header
     window.addEventListener('scroll', this.handleScroll)
     //Set initial offsetTop of panel
@@ -65,10 +99,7 @@ export class Tickers extends Component {
   componentWillUnmount() {
     window.removeEventListener('scroll', this.handleScroll)
   }
-  componentDidUpdate() {
-    console.log(this.state.filterCoins);
-    
-  }
+
   handleScroll = () => {
     if (this.panelRef !== null && this.tickersRef !== null) {
       if (window.pageYOffset >= this.state.panelOffsetTop) {
@@ -80,25 +111,19 @@ export class Tickers extends Component {
       }
 
       if (
-        window.innerHeight + window.pageYOffset >= document.body.offsetHeight-1 &&
-        !this.state.isFiltering && this.state.counter < 1700
+        window.innerHeight + window.pageYOffset >=
+          document.body.offsetHeight - 1 &&
+        !this.state.isFiltering
       ) {
-        console.log('end')
-        fetch(
-          `https://api.coinmarketcap.com/v2/ticker/?convert=BTC&start=${
-            this.state.counter
-          }`
-        )
-          .then(res => res.json())
-          .then(json => {
-            this.setState({
-              coins: this.state.coins.concat(
-                Object.values(json.data).sort(sortHelper.byRank)
-              ),
-              counter: this.state.counter + 100
-            })
-          })
-          .catch(err => console.log(err))
+        this.setState({
+          coins: this.state.coins.concat(
+            this.state.data.slice(
+              this.state.coins.length,
+              this.state.coins.length + 100
+            )
+          ),
+          loading: false
+        })
       }
     }
   }
@@ -108,7 +133,7 @@ export class Tickers extends Component {
     //else just render initial coins and turn notify off
     if (ev.target.value !== '') {
       this.setState({
-        filterCoins: this.state.coins.filter(
+        filterCoins: this.state.data.filter(
           el =>
             el.name.toLowerCase().includes(ev.target.value.toLowerCase()) ||
             el.symbol.toLowerCase().includes(ev.target.value.toLowerCase())
@@ -215,9 +240,9 @@ export class Tickers extends Component {
   render() {
     //Render coins based on filter input
     const coins = this.state.isFiltering
-      ? this.state.filterCoins.map( (el, id) => <Coin data={el} key={id} />)
-      : this.state.coins.map((el,id) => <Coin data={el} key={id} />)
-    
+      ? this.state.filterCoins.map((el, id) => <Coin data={el} key={id} />)
+      : this.state.coins.map((el, id) => <Coin data={el} key={id} />)
+
     const dynamicNum = window.innerWidth > 990 ? 'Number of coins: ' : ''
     const placeholderFilter =
       window.innerWidth < 765
@@ -241,7 +266,9 @@ export class Tickers extends Component {
               <strong>
                 {this.state.isFiltering
                   ? this.state.filterCoins.length
-                  : this.state.coins.length}
+                  : this.state.data.length < this.state.limit
+                    ? (<div><i className="fas fa-sync-alt"></i>{this.state.data.length}/{this.state.limit}</div>)
+                    : this.state.limit}
               </strong>
             </span>
           </div>
@@ -263,6 +290,7 @@ export class Tickers extends Component {
         <div className={classes.Tickers} ref={this.setTickersRef}>
           {coins}
         </div>
+        {this.state.loading ? <Spinner /> : null}
         <i
           className={`fas fa-arrow-up ${classes.ToTop} fa-2x`}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
