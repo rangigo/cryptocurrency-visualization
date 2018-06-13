@@ -47,13 +47,13 @@ export class Tickers extends Component {
 
   fetchData = () => {
     fetch(
-      `https://api.coinmarketcap.com/v2/ticker/?convert=BTC&start=${Math.min(
-        this.state.counter,
-        this.state.limit
-      )}`
+      `https://api.coinmarketcap.com/v2/ticker/?convert=BTC&start=${
+        this.state.counter
+      }`
     )
       .then(res => res.json())
       .then(json => {
+        // console.log('counter', this.state.counter)
         //Set total amount of coins
         if (this.state.limit === 0) {
           this.setState({
@@ -61,20 +61,26 @@ export class Tickers extends Component {
           })
         }
 
-        //Recursion fetch until we have all the coins loaded
-        if (this.state.counter <= this.state.limit) {
+        //Store the coins
+        this.setState({
+          data: this.state.data.concat(
+            Object.values(json.data).sort(sortHelper.byRank)
+          )
+        })
+
+        console.log('data', this.state.data)
+        //If we finished fetch first 100 coins, display them
+        if (this.state.data.length === 100)
           this.setState({
-            data: this.state.data.concat(
-              Object.values(json.data).sort(sortHelper.byRank)
-            ),
-            counter: this.state.counter + 100
+            coins: this.state.data,
+            loading: false,
+            rankRev: true
           })
-          //If we finished fetch first 100 coins, display them
-          if (this.state.data.length === 100)
-            this.setState({
-              coins: this.state.data,
-              loading: false
-            })
+
+        //Recursion fetch until we have all the coins loaded
+        if (this.state.counter <= this.state.limit - (this.state.limit % 100)) {
+          // console.log('?')
+          this.setState({ counter: this.state.counter + 100 })
           this.fetchData()
         }
       })
@@ -112,17 +118,21 @@ export class Tickers extends Component {
       if (
         window.innerHeight + window.pageYOffset >=
           document.body.offsetHeight - 1 &&
-        !this.state.isFiltering
+        !this.state.isFiltering &&
+        this.state.coins.length < this.state.limit
       ) {
-        this.setState({
-          coins: this.state.coins.concat(
-            this.state.data.slice(
-              this.state.coins.length,
-              this.state.coins.length + 100
-            )
-          ),
-          loading: false
-        })
+        this.setState({ loading: true })
+        setTimeout(() => {
+          this.setState({
+            coins: this.state.coins.concat(
+              this.state.data.slice(
+                this.state.coins.length,
+                this.state.coins.length + 100
+              )
+            ),
+            loading: false
+          })
+        }, 500)
       }
     }
   }
@@ -132,7 +142,7 @@ export class Tickers extends Component {
     //else just render initial coins and turn notify off
     if (ev.target.value !== '') {
       this.setState({
-        filterCoins: this.state.data.filter(
+        coins: this.state.data.filter(
           el =>
             el.name.toLowerCase().includes(ev.target.value.toLowerCase()) ||
             el.symbol.toLowerCase().includes(ev.target.value.toLowerCase())
@@ -140,109 +150,61 @@ export class Tickers extends Component {
         isFiltering: true
       })
     } else {
-      this.setState({ isFiltering: false })
+      this.setState({
+        coins: this.state.data.slice(0, 100).sort(sortHelper.byRank),
+        isFiltering: false
+      })
     }
   }
 
   sortHandle = type => {
-    //Sort filtering coins or initial coins based on isFiltering
-    if (this.state.isFiltering) {
-      //Each case will check for reverse sort and then set new states
-      switch (type) {
-        case 'rank':
-          this.state.rankRev
-            ? this.setState({
-                filterCoins: [...this.state.filterCoins]
-                  .sort(sortHelper.byRank)
-                  .reverse(),
-                rankRev: false
-              })
-            : this.setState({
-                filterCoins: [...this.state.filterCoins].sort(
-                  sortHelper.byRank
-                ),
-                rankRev: true
-              })
-          break
-        case 'name':
-          this.state.nameRev
-            ? this.setState({
-                filterCoins: [...this.state.filterCoins]
-                  .sort(sortHelper.byName)
-                  .reverse(),
-                nameRev: false
-              })
-            : this.setState({
-                filterCoins: [...this.state.filterCoins].sort(
-                  sortHelper.byName
-                ),
-                nameRev: true
-              })
-          break
-        case 'price':
-          this.state.priceRev
-            ? this.setState({
-                filterCoins: [...this.state.filterCoins].sort(
-                  sortHelper.byPrice
-                ),
-                priceRev: false
-              })
-            : this.setState({
-                filterCoins: [...this.state.filterCoins]
-                  .sort(sortHelper.byPrice)
-                  .reverse(),
-                priceRev: true
-              })
-          break
-        default:
-      }
-    } else {
-      switch (type) {
-        case 'rank':
-          this.state.rankRev
-            ? this.setState({
-                coins: [...this.state.coins].sort(sortHelper.byRank).reverse(),
-                rankRev: false
-              })
-            : this.setState({
-                coins: [...this.state.coins].sort(sortHelper.byRank),
-                rankRev: true
-              })
-          break
-        case 'name':
-          this.state.nameRev
-            ? this.setState({
-                coins: [...this.state.coins].sort(sortHelper.byName).reverse(),
-                nameRev: false
-              })
-            : this.setState({
-                coins: [...this.state.coins].sort(sortHelper.byName),
-                nameRev: true
-              })
-          break
-        case 'price':
-          this.state.priceRev
-            ? this.setState({
-                coins: [...this.state.coins].sort(sortHelper.byPrice),
-                priceRev: false
-              })
-            : this.setState({
-                coins: [...this.state.coins].sort(sortHelper.byPrice).reverse(),
-                priceRev: true
-              })
-          break
-        default:
-      }
+    switch (type) {
+      case 'rank':
+        this.state.rankRev
+          ? this.setState({
+              coins: [...this.state.coins].sort(sortHelper.byRank).reverse(),
+              rankRev: false
+            })
+          : this.setState({
+              coins: [...this.state.coins].sort(sortHelper.byRank),
+              rankRev: true
+            })
+        break
+      case 'name':
+        this.state.nameRev
+          ? this.setState({
+              coins: [...this.state.coins].sort(sortHelper.byName).reverse(),
+              nameRev: false
+            })
+          : this.setState({
+              coins: [...this.state.coins].sort(sortHelper.byName),
+              nameRev: true
+            })
+        break
+      case 'price':
+        this.state.priceRev
+          ? this.setState({
+              coins: [...this.state.coins].sort(sortHelper.byPrice),
+              priceRev: false
+            })
+          : this.setState({
+              coins: [...this.state.coins].sort(sortHelper.byPrice).reverse(),
+              priceRev: true
+            })
+        break
+      default:
     }
   }
 
   render() {
-    //Render coins based on filter input
-    const coins = this.state.isFiltering
-      ? this.state.filterCoins.map((el, id) => <Coin data={el} key={id} />)
-      : this.state.coins.map((el, id) => <Coin data={el} key={id} />)
-
-    const dynamicNum = window.innerWidth > 990 ? 'Number of coins: ' : ''
+    const dynamicNum =
+      window.innerWidth > 990
+        ? this.state.data.length < this.state.limit
+          ? 'Loading coins: '
+          : this.state.isFiltering
+            ? 'Coins found: '
+            : 'Coins displayed: '
+        : ''
     const placeholderFilter =
       window.innerWidth < 765
         ? window.innerWidth < 500
@@ -257,18 +219,21 @@ export class Tickers extends Component {
             <input
               className={classes.Filter}
               type="text"
-              onChange={ev => this.filterHandle(ev)}
+              onChange={this.filterHandle}
               placeholder={placeholderFilter}
               disabled={this.state.data.length < this.state.limit}
             />
             <span className={classes.CoinsAmount}>
               {dynamicNum}
               <strong>
-                {this.state.isFiltering
-                  ? this.state.filterCoins.length
-                  : this.state.data.length < this.state.limit
-                    ? (<div><i className="fas fa-sync-alt"></i>{this.state.data.length}/{this.state.limit}</div>)
-                    : this.state.limit}
+                {this.state.data.length < this.state.limit ? (
+                  <div>
+                    <i className="fas fa-sync-alt" />
+                    {this.state.data.length}/{this.state.limit}
+                  </div>
+                ) : (
+                  `${this.state.coins.length}/${this.state.data.length}`
+                )}
               </strong>
             </span>
           </div>
@@ -288,7 +253,7 @@ export class Tickers extends Component {
           </div>
         </div>
         <div className={classes.Tickers} ref={this.setTickersRef}>
-          {coins}
+          {this.state.coins.map((el, id) => <Coin data={el} key={id} />)}
         </div>
         {this.state.loading ? <Spinner /> : null}
         <i
