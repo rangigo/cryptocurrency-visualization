@@ -27,9 +27,7 @@ export class Tickers extends Component {
   state = {
     data: [],
     coins: [],
-    filterCoins: [],
     isFiltering: false,
-    // isReverseSort: false,
     rankRev: false,
     priceRev: false,
     nameRev: false,
@@ -67,8 +65,6 @@ export class Tickers extends Component {
             Object.values(json.data).sort(sortHelper.byRank)
           )
         })
-
-        console.log('data', this.state.data)
         //If we finished fetch first 100 coins, display them
         if (this.state.data.length === 100)
           this.setState({
