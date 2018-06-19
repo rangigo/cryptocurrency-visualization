@@ -115,7 +115,7 @@ export class Tickers extends Component {
         window.innerHeight + window.pageYOffset >=
           document.body.offsetHeight - 1 &&
         !this.state.isFiltering &&
-        this.state.coins.length < this.state.limit && !this.state.loading
+        this.state.coins.length < this.state.data.length && !this.state.loading
       ) {
         this.setState({ loading: true })
         setTimeout(() => {
@@ -195,7 +195,7 @@ export class Tickers extends Component {
   render() {
     const dynamicNum =
       window.innerWidth > 990
-        ? this.state.data.length < this.state.limit
+        ? this.state.data.length < this.state.limit - (this.state.limit % 100)
           ? 'Loading coins: '
           : this.state.isFiltering
             ? 'Coins found: '
@@ -217,12 +217,12 @@ export class Tickers extends Component {
               type="text"
               onChange={this.filterHandle}
               placeholder={placeholderFilter}
-              disabled={this.state.data.length < this.state.limit}
+              disabled={this.state.data.length < this.state.limit - (this.state.limit % 100)}
             />
             <span className={classes.CoinsAmount}>
               {dynamicNum}
               <strong>
-                {this.state.data.length < this.state.limit ? (
+                {this.state.data.length < this.state.limit - (this.state.limit % 100) ? (
                   <div>
                     <i className="fas fa-sync-alt" />
                     {this.state.data.length}/{this.state.limit}
