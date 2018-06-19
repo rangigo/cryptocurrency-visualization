@@ -115,7 +115,7 @@ export class Tickers extends Component {
         window.innerHeight + window.pageYOffset >=
           document.body.offsetHeight - 1 &&
         !this.state.isFiltering &&
-        this.state.coins.length < this.state.limit
+        this.state.coins.length < this.state.limit && !this.state.loading
       ) {
         this.setState({ loading: true })
         setTimeout(() => {
@@ -128,7 +128,7 @@ export class Tickers extends Component {
             ),
             loading: false
           })
-        }, 500)
+        }, 800)
       }
     }
   }
