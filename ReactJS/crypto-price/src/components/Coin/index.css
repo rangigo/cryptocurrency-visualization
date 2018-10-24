@@ -12,6 +12,10 @@
   margin-right: 7px;
 }
 
+.Coin h1 {
+  font-size: 1.8em;
+}
+
 .Coin h4 { 
   display: flex;
   justify-content: center;
